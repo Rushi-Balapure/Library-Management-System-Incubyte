@@ -4,6 +4,15 @@ public class Book {
     private String title;
     private String author;
     private int publicationYear;
+
+    public void setTotalCopies(int totalCopies) {
+        this.totalCopies = totalCopies;
+    }
+
+    public void setAvailableCopies(int availableCopies) {
+        this.availableCopies = availableCopies;
+    }
+
     private int totalCopies;
     private int availableCopies;
 

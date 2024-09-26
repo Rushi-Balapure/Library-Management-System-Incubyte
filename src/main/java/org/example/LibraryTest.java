@@ -1,6 +1,5 @@
 package org.example;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LibraryTest {
     private Library library;
 
-    @BeforeEach
+//    @BeforeEach
     public void setUp() {
         library = new Library(); // Initialize library before each test
     }
@@ -28,9 +27,9 @@ public class LibraryTest {
         Book duplicateBook = new Book("12345", "Test Book", "Test Author", 2023, 3);
         library.addBook(duplicateBook);
 
-//        Book storedBook = library.getBookByISBN("12345");
-//        assertEquals(5, storedBook.getTotalCopies()); // Ensure total copies have increased
-//        assertEquals(5, storedBook.getAvailableCopies()); // Ensure available copies have increased
+        Book storedBook = library.getBookByISBN("12345");
+        assertEquals(5, storedBook.getTotalCopies()); // Ensure total copies have increased
+        assertEquals(5, storedBook.getAvailableCopies()); // Ensure available copies have increased
     }
 
     @Test
