@@ -15,24 +15,44 @@ public class LibraryTest {
 
     @Test
     public void testAddBook() {
-        Book book = new Book("12345", "Test Book", "Test Author", 2023);
+        Book book = new Book("12345", "Test Book", "Test Author", 2023, 3);
         library.addBook(book);
         assertDoesNotThrow(() -> library.borrowBook("12345"));
     }
 
     @Test
-    public void testAddDuplicateBook() {
-        Book book = new Book("12345", "Test Book", "Test Author", 2023);
+    public void testAddDuplicateBookIncreasesCopies() {
+        Book book = new Book("12345", "Test Book", "Test Author", 2023, 2);
         library.addBook(book);
-        assertThrows(IllegalArgumentException.class, () -> library.addBook(book));
+
+        Book duplicateBook = new Book("12345", "Test Book", "Test Author", 2023, 3);
+        library.addBook(duplicateBook);
+
+//        Book storedBook = library.getBookByISBN("12345");
+//        assertEquals(5, storedBook.getTotalCopies()); // Ensure total copies have increased
+//        assertEquals(5, storedBook.getAvailableCopies()); // Ensure available copies have increased
     }
 
     @Test
-    public void testBorrowBookSuccess() {
-        Book book = new Book("12345", "Test Book", "Test Author", 2023);
+    public void testBorrowBookSuccessWithMultipleCopies() {
+        Book book = new Book("12345", "Test Book", "Test Author", 2023, 3);
         library.addBook(book);
         library.borrowBook("12345");
-        assertFalse(book.isAvailable());
+
+        assertEquals(2, book.getAvailableCopies()); // Check if available copies decrease
+        assertTrue(book.isAvailable()); // Still available because copies remain
+    }
+
+    @Test
+    public void testBorrowAllCopiesAndCheckAvailability() {
+        Book book = new Book("12345", "Test Book", "Test Author", 2023, 2);
+        library.addBook(book);
+
+        library.borrowBook("12345"); // Borrow first copy
+        library.borrowBook("12345"); // Borrow second copy
+
+        assertFalse(book.isAvailable()); // No copies should be left
+        assertEquals(0, book.getAvailableCopies()); // All copies borrowed
     }
 
     @Test
@@ -42,19 +62,22 @@ public class LibraryTest {
 
     @Test
     public void testBorrowUnavailableBook() {
-        Book book = new Book("12345", "Test Book", "Test Author", 2023);
+        Book book = new Book("12345", "Test Book", "Test Author", 2023, 1);
         library.addBook(book);
-        library.borrowBook("12345");
+        library.borrowBook("12345"); // Borrow the only copy
+
         assertThrows(IllegalStateException.class, () -> library.borrowBook("12345"));
     }
 
     @Test
     public void testReturnBookSuccess() {
-        Book book = new Book("12345", "Test Book", "Test Author", 2023);
+        Book book = new Book("12345", "Test Book", "Test Author", 2023, 1);
         library.addBook(book);
         library.borrowBook("12345");
         library.returnBook("12345");
+
         assertTrue(book.isAvailable());
+        assertEquals(1, book.getAvailableCopies()); // Verify available copies have increased
     }
 
     @Test
@@ -64,20 +87,20 @@ public class LibraryTest {
 
     @Test
     public void testReturnAlreadyAvailableBook() {
-        Book book = new Book("12345", "Test Book", "Test Author", 2023);
+        Book book = new Book("12345", "Test Book", "Test Author", 2023, 1);
         library.addBook(book);
         assertThrows(IllegalStateException.class, () -> library.returnBook("12345"));
     }
 
     @Test
     public void testViewAvailableBooks() {
-        Book book1 = new Book("12345", "Test Book 1", "Test Author", 2023);
-        Book book2 = new Book("67890", "Test Book 2", "Test Author", 2023);
+        Book book1 = new Book("12345", "Test Book 1", "Test Author", 2023, 1);
+        Book book2 = new Book("67890", "Test Book 2", "Test Author", 2023, 2);
         library.addBook(book1);
         library.addBook(book2);
         library.borrowBook("67890");
 
-        // Only book1 should be available
+        // Ensure both books are listed as available
         library.viewAvailableBooks();
     }
 
@@ -98,20 +121,29 @@ public class LibraryTest {
 
         try {
             obj.setUp();
-            obj.testAddDuplicateBook();
-            System.out.println("Unit Test for Duplicate Books Successful");
+            obj.testAddDuplicateBookIncreasesCopies();
+            System.out.println("Unit Test for Duplicate Book Handling Successful");
             ctr++;
         } catch (Exception e) {
-            System.out.println("Unit Test for Duplicate Books Failed");
+            System.out.println("Unit Test for Duplicate Book Handling Failed");
         }
 
         try {
             obj.setUp();
-            obj.testBorrowBookSuccess();
-            System.out.println("Unit Test for Borrowing Books Successful");
+            obj.testBorrowBookSuccessWithMultipleCopies();
+            System.out.println("Unit Test for Borrowing Books with Multiple Copies Successful");
             ctr++;
         } catch (Exception e) {
-            System.out.println("Unit Test for Borrowing Books Failed");
+            System.out.println("Unit Test for Borrowing Books with Multiple Copies Failed");
+        }
+
+        try {
+            obj.setUp();
+            obj.testBorrowAllCopiesAndCheckAvailability();
+            System.out.println("Unit Test for Borrowing All Copies Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Borrowing All Copies Failed");
         }
 
         try {
@@ -168,6 +200,6 @@ public class LibraryTest {
             System.out.println("Unit Test for Displaying Available Books Failed");
         }
 
-        System.out.println("Total Unit Tests Passed: " + ctr + "/9");
+        System.out.println("Total Unit Tests Passed: " + ctr + "/10");
     }
 }

@@ -4,14 +4,16 @@ public class Book {
     private String title;
     private String author;
     private int publicationYear;
-    private boolean isAvailable;
+    private int totalCopies;
+    private int availableCopies;
 
-    public Book(String isbn, String title, String author, int publicationYear) {
+    public Book(String isbn, String title, String author, int publicationYear, int totalCopies) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.publicationYear = publicationYear;
-        this.isAvailable = true; // New book is available by default
+        this.totalCopies = totalCopies;
+        this.availableCopies = totalCopies; // All copies are available initially
     }
 
     public String getIsbn() {
@@ -30,16 +32,37 @@ public class Book {
         return publicationYear;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public int getAvailableCopies() {
+        return availableCopies;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public int getTotalCopies() {
+        return totalCopies;
+    }
+
+    public boolean isAvailable() {
+        return availableCopies > 0;
+    }
+
+    public void borrowBook() {
+        if (availableCopies > 0) {
+            availableCopies--;
+        } else {
+            throw new IllegalStateException("No available copies left.");
+        }
+    }
+
+    public void returnBook() {
+        if (availableCopies < totalCopies) {
+            availableCopies++;
+        } else {
+            throw new IllegalStateException("All copies are already returned.");
+        }
     }
 
     @Override
     public String toString() {
-        return String.format("ISBN: %s, Title: %s, Author: %s, Year: %d", isbn, title, author, publicationYear);
+        return String.format("ISBN: %s, Title: %s, Author: %s, Year: %d, Available: %d/%d",
+                isbn, title, author, publicationYear, availableCopies, totalCopies);
     }
 }

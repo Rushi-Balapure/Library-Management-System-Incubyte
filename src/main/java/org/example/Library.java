@@ -7,15 +7,17 @@ public class Library {
     private Map<String, Book> books;
 
     public Library() {
-        books =  new HashMap<>();
+        books = new HashMap<>();
     }
 
-    // Add a new book to the library
+    // Add a new book to the library or increase copies if the book already exists
     public void addBook(Book book) {
         if (books.containsKey(book.getIsbn())) {
-            throw new IllegalArgumentException("Book with this ISBN already exists.");
+            Book existingBook = books.get(book.getIsbn());
+            existingBook.returnBook(); // Simulating adding more copies
+        } else {
+            books.put(book.getIsbn(), book);
         }
-        books.put(book.getIsbn(), book);
     }
 
     // Borrow a book by ISBN
@@ -25,9 +27,9 @@ public class Library {
             throw new IllegalArgumentException("Book not found.");
         }
         if (!book.isAvailable()) {
-            throw new IllegalStateException("Book is not available.");
+            throw new IllegalStateException("No available copies to borrow.");
         }
-        book.setAvailable(false);
+        book.borrowBook();
     }
 
     // Return a borrowed book
@@ -36,19 +38,14 @@ public class Library {
         if (book == null) {
             throw new IllegalArgumentException("Book not found.");
         }
-        if (book.isAvailable()) {
-            throw new IllegalStateException("Book is not borrowed.");
-        }
-        book.setAvailable(true);
+        book.returnBook();
     }
 
     // View all available books
     public void viewAvailableBooks() {
         for (Book book : books.values()) {
-            if (book.isAvailable()) {
-                System.out.println(book);
-            }
+            System.out.println(book);
         }
     }
-}
 
+}
