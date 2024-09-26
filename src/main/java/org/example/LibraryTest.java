@@ -10,7 +10,7 @@ public class LibraryTest {
 
     @BeforeEach
     public void setUp() {
-        library = new Library();
+        library = new Library(); // Initialize library before each test
     }
 
     @Test
@@ -79,5 +79,95 @@ public class LibraryTest {
 
         // Only book1 should be available
         library.viewAvailableBooks();
+    }
+
+    // Manually running tests from main method
+    public static void main(String[] args) {
+        LibraryTest obj = new LibraryTest();
+        int ctr = 0; // to count the number of tests passed
+
+        // Manually call setUp() before each test to initialize the library
+        try {
+            obj.setUp(); // Initialize for each test
+            obj.testAddBook();
+            System.out.println("Unit Test for Adding Books Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Adding Books Failed");
+        }
+
+        try {
+            obj.setUp();
+            obj.testAddDuplicateBook();
+            System.out.println("Unit Test for Duplicate Books Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Duplicate Books Failed");
+        }
+
+        try {
+            obj.setUp();
+            obj.testBorrowBookSuccess();
+            System.out.println("Unit Test for Borrowing Books Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Borrowing Books Failed");
+        }
+
+        try {
+            obj.setUp();
+            obj.testBorrowNonExistentBook();
+            System.out.println("Unit Test for Non Existent Borrowing Books Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Non Existent Borrowing Books Failed");
+        }
+
+        try {
+            obj.setUp();
+            obj.testBorrowUnavailableBook();
+            System.out.println("Unit Test for Borrowing Unavailable Books Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Borrowing Unavailable Books Failed");
+        }
+
+        try {
+            obj.setUp();
+            obj.testReturnBookSuccess();
+            System.out.println("Unit Test for Returning Books Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Returning Books Failed");
+        }
+
+        try {
+            obj.setUp();
+            obj.testReturnNonExistentBook();
+            System.out.println("Unit Test for Returning Non-Existent Books Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Returning Non-Existent Books Failed");
+        }
+
+        try {
+            obj.setUp();
+            obj.testReturnAlreadyAvailableBook();
+            System.out.println("Unit Test for Returning Already Available Books Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Returning Already Available Books Failed");
+        }
+
+        try {
+            obj.setUp();
+            obj.testViewAvailableBooks();
+            System.out.println("Unit Test for Displaying Available Books Successful");
+            ctr++;
+        } catch (Exception e) {
+            System.out.println("Unit Test for Displaying Available Books Failed");
+        }
+
+        System.out.println("Total Unit Tests Passed: " + ctr + "/9");
     }
 }
